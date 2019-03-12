@@ -19,40 +19,56 @@ if ! whois_loc="$(type -p "whois")" || [ -z "$whois_loc" ]; then
 fi
 
 if [ -n "$1" ] ; then
-
-if [[ $1 == 'all' ]]; then
         # .si domain: slovenia cctld, arnes registry, 100 queries per hour or ban
         # .no domain: norwegian, uninett norid registry, 3000 queries per day wait till midnight
         # .de domain: germany, no data of registry, 1000 queries per day or ban
         # .it domain: italy, no data of registry, no data of requests per time amount
-        tlds=(si no de it)
-        availables=('No entries found' 'No whois information found' 'Status: free' 'Status:             AVAILABLE')
-        denieds=('Query denied' 'limit exceeded' '55000000002' 'denied') ## idk about .it
-        sleeps=(36 29 87 87) # delay between requests in seconds to prevent ban
+        tlds=(si no de it ru)
+        availables=('No entries found' 'No whois information found' 'Status: free' 'Status:             AVAILABLE', 'No entries found for the selected source')
+        denieds=('Query denied' 'limit exceeded' '55000000002' 'denied', 'You have exceeded allowed connection rate') ## idk about .it
+        sleeps=(36 29 87 87 2) # delay between requests in seconds to prevent ban
         # add your domains, you get the point
         spanje=${sleeps[0]} # max sleep of sleeps will be the sleep (-;
+
+if [[ $1 == 'all' ]]; then
         for n in "${sleeps[@]}" ; do
                 ((n > spanje)) && spanje=$n
         done
+        # everything is already set!
 else
-        tlds=($1)
+
+                for i in "${!tlds[@]}"; do
+                        if [[ "${tlds[$i]}" = "$1" ]]; then
+                                index=$i;
+                        fi
+                done
+
+
+
+     if [ -z "$2" ] || [ -z "$3" ] || [ -z "$4" ] ; then
+        if [ -z $index ] ; then
+                echo -e "\e[91m$---> Terminating: no whois response values stored for this domain. Input them as arguments.\e[0m"
+                exit
+        fi
+     fi
         if [ -n "$2" ] ; then
-          availables=($2)
+                availables=($2)
         else
-          availables=("No entries found")
+                availables=(${availables[$index]})
         fi
 
         if [ -n "$3" ] ; then
-          denieds=($3)
+                denieds=($3)
         else
-          denieds=("Query denied")
+                denieds=(${denieds[${index}]})
         fi
 
         if [ -n "$4" ] ; then
-          spanje=$4
+                spanje=$4
         else
-          spanje=87
+                spanje=${sleeps[$index]}
         fi
+        tlds=($1)
 fi
 
   ok=true
