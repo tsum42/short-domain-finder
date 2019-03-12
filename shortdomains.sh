@@ -21,40 +21,40 @@ fi
 if [ -n "$1" ] ; then
 
 if [[ $1 == 'all' ]]; then
-	# .si domain: slovenia cctld, arnes registry, 100 queries per hour or ban
-	# .no domain: norwegian, uninett norid registry, 3000 queries per day wait till midnight
-	# .de domain: germany, no data of registry, 1000 queries per day or ban
-	# .it domain: italy, no data of registry, no data of requests per time amount
-	tlds=(si no de it)
-	availables=('No entries found' 'No whois information found' 'Status: free' 'Status:             AVAILABLE') 
-	denieds=('Query denied' 'limit exceeded' '55000000002' 'denied') ## idk about .it
-	sleeps=(36 29 87 87) # delay between requests in seconds to prevent ban
-	# add your domains, you get the point
-	spanje=${sleeps[0]} # max sleep of sleeps will be the sleep (-;
-	for n in "${sleeps[@]}" ; do
-		((n > spanje)) && spanje=$n
-	done
+        # .si domain: slovenia cctld, arnes registry, 100 queries per hour or ban
+        # .no domain: norwegian, uninett norid registry, 3000 queries per day wait till midnight
+        # .de domain: germany, no data of registry, 1000 queries per day or ban
+        # .it domain: italy, no data of registry, no data of requests per time amount
+        tlds=(si no de it)
+        availables=('No entries found' 'No whois information found' 'Status: free' 'Status:             AVAILABLE')
+        denieds=('Query denied' 'limit exceeded' '55000000002' 'denied') ## idk about .it
+        sleeps=(36 29 87 87) # delay between requests in seconds to prevent ban
+        # add your domains, you get the point
+        spanje=${sleeps[0]} # max sleep of sleeps will be the sleep (-;
+        for n in "${sleeps[@]}" ; do
+                ((n > spanje)) && spanje=$n
+        done
 else
-	tlds=($1)
-	if [ -n "$2" ] ; then
-	  availables=($2)
-	else
-	  availables=("No entries found")
-	fi
+        tlds=($1)
+        if [ -n "$2" ] ; then
+          availables=($2)
+        else
+          availables=("No entries found")
+        fi
 
-	if [ -n "$3" ] ; then 
-	  denieds=($3)
-	else
-	  denieds=("Query denied")
-	fi
-	
-	if [ -n "$4" ] ; then 
-	  spanje=$4
-	else
-	  spanje=87
-	fi
+        if [ -n "$3" ] ; then
+          denieds=($3)
+        else
+          denieds=("Query denied")
+        fi
+
+        if [ -n "$4" ] ; then
+          spanje=$4
+        else
+          spanje=87
+        fi
 fi
-  
+
   ok=true
   if [ -n "$7" ] ; then
     list=`cat $7`
@@ -62,8 +62,8 @@ fi
     list=`echo {{a..z},{0..9}}{{a..z},{0..9}}`
   fi
 else
-  echo -e "\e[93m"'  /-Use at your own risk-> Short domain finder Beta <--Educational use only-\'
-  echo -e "\e[93m"' /------> (C) 2019 Anton Sijanec, all rights reserved, github/AstiriL <------\'
+  echo -e "\e[93m"'  /----------------------> Short domain finder Beta <-----------------------\'
+  echo -e "\e[93m"' /------------------> 2019 Anton Sijanec, github/AstiriL <-------------------\'
   echo -e "\e[93m"'/--------> Checks all short domain names for availability using WhoIs <-------\'
   echo -e "\e[93m"'\---> Usage: ./shortdomains.sh <TLD|all> [notfound-str] [querydenied-str] <---/'
   echo -e "\e[93m"' \---> [delayseconds-int] [save-whois-bool] [show-whois-bool] [list-path] <--/'
@@ -72,17 +72,13 @@ fi
 
 
 if [ $ok ] ; then
-  echo -e "\e[93m"'  /-Use at your own risk-> Short domain finder Beta <--Educational use only-\'
-  echo -e "\e[93m"' /------> (C) 2019 Anton Sijanec, all rights reserved, github/AstiriL <------\'
-  echo -e "\e[93m"'/--------> Checks all short domain names for availability using WhoIs <-------\'
-  echo -e "\e[93m"'\---> Usage: ./shortdomains.sh <TLD|all> [notfound-str] [querydenied-str] <---/'
-  echo -e "\e[93m"' \---> [delayseconds-int] [save-whois-bool] [show-whois-bool] [list-path] <--/'
-  echo -e "\e[93m"'  \---------> Sends out a sound alert when a free domain is found <---------/'"\e[0m"
-	tldcount=${#tlds[@]}
+        tldcount=${#tlds[@]}
+echo "---> Starting... Delay: "$spanje", TLDs: "$tldcount"."
   for domain in $list # do for every 2 character possibility
   do
-	for (( i=0; i<$tldcount; i++ )); # do for every tld
-	do
+         sleep $spanje
+        for (( i=0; i<$tldcount; i++ )); # do for every tld
+        do
      VAL=`whois $domain.${tlds[$i]}`
      while [[ $VAL == *${denieds[$i]}* ]]
      do
@@ -90,21 +86,20 @@ if [ $ok ] ; then
        sleep $spanje
        VAL=`whois $domain.${tlds[$i]}`
      done
-	 if [[ $5 == true ]]; then
-		echo $VAL > "$whoisdatadir/$domain.${tlds[$i]}"
-	 fi
-	 if [[ $6 == true ]]; then
-		echo $VAL
-	 fi
+         if [[ $5 == true ]]; then
+                echo $VAL > "$whoisdatadir/$domain.${tlds[$i]}"
+         fi
+         if [[ $6 == true ]]; then
+                echo $VAL
+         fi
      if [[ $VAL == *${availables[$i]}* ]]
      then
        echo -e "\e[92m$domain.${tlds[$i]} FREE\e[0m\007"
-       echo "$domain.$1" >> freedomains.$1
+       echo "$domain.${tlds[$i]}" >> freedomains.${tlds[$i]}
      else
        echo -e "\e[91m$domain.${tlds[$i]} TAKEN\e[0m"
      fi
-	 done
-	 sleep $spanje
+         done
   done
   echo -e "\e[39m"
 fi
