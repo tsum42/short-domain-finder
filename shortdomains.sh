@@ -23,18 +23,18 @@ if [ -n "$1" ] ; then
         # .no domain: norwegian, uninett norid registry, 3000 queries per day wait till midnight
         # .de domain: germany, no data of registry, 1000 queries per day or ban
         # .it domain: italy, no data of registry, no data of requests per time amount
-        tlds=(si no de it ru)
-        availables=('No entries found' 'No whois information found' 'Status: free' 'Status:             AVAILABLE', 'No entries found for the selected source')
-        denieds=('Query denied' 'limit exceeded' '55000000002' 'denied', 'You have exceeded allowed connection rate') ## idk about .it
-        sleeps=(36 29 87 87 2) # delay between requests in seconds to prevent ban
+        tlds=(si no de it ru co uk me us ca pw fr cc cn be)
+        availables=('No entries found' 'No whois information found' 'Status: free' 'Status:             AVAILABLE', 'No entries found for the selected source' 'No Data Found' 'No whois information found.' 'NOT FOUND' 'No Data Found' 'Not found' 'DOMAIN NOT FOUND' 'No entries found' 'No whois information found.' 'No whois information found.' 'Status: AVAILABLE')
+        denieds=('Query denied' 'limit exceeded' '55000000002' 'denied', 'You have exceeded allowed connection rate', 'denied' 'denied' 'denied' 'denied' 'denied' 'denied' 'denied' 'denied' 'denied' 'denied') ## idk about .it and .co and .me and .us and .ca and .pw and .fr and .cc and .cn and .be
+        sleeps=(36 29 87 87 2 87 87 87 87 87 60 87 87 87 87) # idk about .me .it .uk .us .ca .fr .cc .cn .be delay between requests in seconds to prevent ban
         # add your domains, you get the point
         spanje=${sleeps[0]} # max sleep of sleeps will be the sleep (-;
 
 if [[ $1 == 'all' ]]; then
         for n in "${sleeps[@]}" ; do
-                ((n > spanje)) && spanje=$n
+	        ((n > spanje)) && spanje=$n
         done
-        # everything is already set!
+	# everything is already set!
 else
 
                 for i in "${!tlds[@]}"; do
@@ -46,31 +46,31 @@ else
 
 
      if [ -z "$2" ] || [ -z "$3" ] || [ -z "$4" ] ; then
-        if [ -z $index ] ; then
-                echo -e "\e[91m$---> Terminating: no whois response values stored for this domain. Input them as arguments.\e[0m"
-                exit
-        fi
+	if [ -z $index ] ; then
+		echo -e "\e[91m$---> Terminating: no whois response values stored for this domain. Input them as arguments.\e[0m"
+              	exit
+	fi
      fi
-        if [ -n "$2" ] ; then
-                availables=($2)
-        else
-                availables=(${availables[$index]})
-        fi
+	if [ -n "$2" ] ; then
+		availables=($2)
+	else
+		availables=(${availables[$index]})
+	fi
 
-        if [ -n "$3" ] ; then
-                denieds=($3)
-        else
-                denieds=(${denieds[${index}]})
-        fi
-
-        if [ -n "$4" ] ; then
-                spanje=$4
-        else
-                spanje=${sleeps[$index]}
-        fi
-        tlds=($1)
+	if [ -n "$3" ] ; then 
+		denieds=($3)
+	else
+		denieds=(${denieds[${index}]})
+	fi
+	
+	if [ -n "$4" ] ; then 
+		spanje=$4
+	else
+		spanje=${sleeps[$index]}
+	fi
+	tlds=($1)
 fi
-
+  
   ok=true
   if [ -n "$7" ] ; then
     list=`cat $7`
@@ -88,13 +88,18 @@ fi
 
 
 if [ $ok ] ; then
-        tldcount=${#tlds[@]}
-echo "---> Starting... Delay: "$spanje", TLDs: "$tldcount"."
+	tldcount=${#tlds[@]}
+for (( i=0; i<$tldcount; i++ ));
+do
+	mv freedomains.$tlds[$i] freedomains.$tlds[$i].old
+	echo "---> moved freedomains.$tlds[$i] to freedomains.$tlds[$i].old"
+done
+echo "---> Starting... Delay: "$spanje s", TLDs: "$tldcount"."
   for domain in $list # do for every 2 character possibility
   do
-         sleep $spanje
-        for (( i=0; i<$tldcount; i++ )); # do for every tld
-        do
+	 sleep $spanje
+	for (( i=0; i<$tldcount; i++ )); # do for every tld
+	do
      VAL=`whois $domain.${tlds[$i]}`
      while [[ $VAL == *${denieds[$i]}* ]]
      do
@@ -102,12 +107,12 @@ echo "---> Starting... Delay: "$spanje", TLDs: "$tldcount"."
        sleep $spanje
        VAL=`whois $domain.${tlds[$i]}`
      done
-         if [[ $5 == true ]]; then
-                echo $VAL > "$whoisdatadir/$domain.${tlds[$i]}"
-         fi
-         if [[ $6 == true ]]; then
-                echo $VAL
-         fi
+	 if [[ $5 == true ]]; then
+		echo $VAL > "$whoisdatadir/$domain.${tlds[$i]}"
+	 fi
+	 if [[ $6 == true ]]; then
+		echo $VAL
+	 fi
      if [[ $VAL == *${availables[$i]}* ]]
      then
        echo -e "\e[92m$domain.${tlds[$i]} FREE\e[0m\007"
@@ -115,7 +120,7 @@ echo "---> Starting... Delay: "$spanje", TLDs: "$tldcount"."
      else
        echo -e "\e[91m$domain.${tlds[$i]} TAKEN\e[0m"
      fi
-         done
+	 done
   done
   echo -e "\e[39m"
 fi
