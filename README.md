@@ -1,16 +1,14 @@
 # short-domain-finder
-bash script that searches for available short domains by bruteforcing whois.
+a script bundle used to find short (2 character) domain names by bruteforcing known availibility check websites without captchas and by querying whois databases.
 
-installation:
+requirements and installation:
 ```
-sudo apt update -y
-sudp apt upgrade -y
-sudo apt install whois
-sudo apt autoremove
+sudo apt update
+sudp apt upgrade
+sudo apt install whois curl tor torsocks
+# set tor password and enable control port and socks5
 sudo apt clean
 cd
 git clone https://github.com/AstiriL/short-domain-finder.git
 cd short-domain-finder
-chmod +x ./shortdomains.sh
-./shortdomains.sh
 ```
