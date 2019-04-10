@@ -6,9 +6,18 @@ requirements and installation:
 sudo apt update
 sudp apt upgrade
 sudo apt install whois curl tor torsocks
-# set tor password and enable control port and socks5
+```
+edit /etc/tor/torrc and enable ControlPort on 127.0.0.1:9051 and SocksPort on 127.0.0.1:9050, use
+```
+tor --hash-password yourtorpassword
+```
+to generate a Control Hash Password to be placed in torrc. Also update that password in scripts that use it.
+```
 sudo apt clean
 cd
 git clone https://github.com/AstiriL/short-domain-finder.git
 cd short-domain-finder
+chmod +x *.sh
+chmod +x *.py
+chmod +x *.php
 ```
