@@ -1,4 +1,6 @@
 # short-domain-finder
+Because, as you probably know, 2 letter domains (xy.ab) can be a real treasure. They can be easily sold for a couple thousand euros. I recommend you to wait a year or two holding it and then sell it, Internet is growing and short domain will get way more valuable.
+
 a script bundle used to find short (2 character) domain names by bruteforcing known availibility check websites without captchas and by querying whois databases.
 
 requirements and installation:
