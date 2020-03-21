@@ -23,6 +23,7 @@ if [ -n "$1" ] ; then
         # .no domain: norwegian, uninett norid registry, 3000 queries per day wait till midnight
         # .de domain: germany, no data of registry, 1000 queries per day or ban
         # .it domain: italy, no data of registry, no data of requests per time amount
+				oneltr=(0 0 1 0 0 1 1 0 1 0 0 1 1 1 0 0 0 0 0 1 1 1 0 1 1 0 1)
         tlds=(si no de it ru co uk me us ca pw fr cc cn be nl tn eu su cz dk ro lt at se hu nu)
         availables=('No entries found' 'No whois information found' 'Status: free' 'Status:             AVAILABLE', 'No entries found for the selected source' 'No Data Found' 'No whois information found.' 'NOT FOUND' 'No Data Found' 'Not found' 'DOMAIN NOT FOUND' 'No entries found' 'No whois information found.' 'No whois information found.' 'Status: AVAILABLE', '.nl is free', 'NO OBJECT FOUND!', 'Status: AVAILABLE', 'No entries found for the selected source(s).' '%ERROR:101: no entries found' 'Not found:', 'No entries found for the selected source(s).', 'available', 'nothing found', ' not found.' 'No match', 'not found.')
         denieds=('Query denied' 'limit exceeded' '55000000002' 'denied', 'You have exceeded allowed connection rate', 'denied' 'denied' 'denied' 'denied' 'denied' 'denied' 'denied' 'denied' 'denied' 'denied' 'denied' 'denied' 'denied' 'You have exceeded allowed connection rate' 'denied' 'denied' 'denied' 'denied' 'denied' 'denied' 'denied') # ne vem za: it co me us ca pw fr cc cn be nl tn eu cz dk ro lt at se hu nu
@@ -57,25 +58,37 @@ else
 		availables=(${availables[$index]})
 	fi
 
-	if [ -n "$3" ] ; then 
+	if [ -n "$3" ] ; then
 		denieds=($3)
 	else
 		denieds=(${denieds[${index}]})
 	fi
-	
-	if [ -n "$4" ] ; then 
+
+	if [ -n "$4" ] ; then
 		spanje=$4
 	else
 		spanje=${sleeps[$index]}
 	fi
 	tlds=($1)
 fi
-  
+
   ok=true
   if [ -n "$7" ] ; then
     list=`cat $7`
   else
-    list=`echo {{a..z},{0..9}}{{a..z},{0..9}}`
+		if [[ $8 == true ]]; then
+	    list=`echo {{a..z},{0..9}}`
+			newtlds=()
+			for (( iter=0; iter<$tldcount; iter++));
+			do
+				if [[ oneltr[$iter] == 1 ]]; then
+					newtlds+=($tlds[$iter])
+				fi
+			done
+			tlds=("${newtlds[@]}")
+		else
+  	  list=`echo {{a..z},{0..9}}{{a..z},{0..9}}`
+		fi
   fi
 else
   echo -e "\e[93m"'  /----------------------> Short domain finder Beta <-----------------------\'
@@ -83,7 +96,8 @@ else
   echo -e "\e[93m"'/--------> Checks all short domain names for availability using WhoIs <-------\'
   echo -e "\e[93m"'\---> Usage: ./shortdomains.sh <TLD|all> [notfound-str] [querydenied-str] <---/'
   echo -e "\e[93m"' \---> [delayseconds-int] [save-whois-bool] [show-whois-bool] [list-path] <--/'
-  echo -e "\e[93m"'  \---------> Sends out a sound alert when a free domain is found <---------/'"\e[0m"
+  echo -e "\e[93m"'  \-----------------> [search-one-letter-domains-bool=false] <--------------/'
+  echo -e "\e[93m"'   \--------> Sends out a sound alert when a free domain is found <--------/'"\e[0m"
 fi
 
 
