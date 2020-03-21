@@ -79,10 +79,11 @@ fi
 		if [[ $8 == true ]]; then
 	    list=`echo {{a..z},{0..9}}`
 			newtlds=()
+			tldcount=${#tlds[@]}
 			for (( iter=0; iter<$tldcount; iter++));
 			do
-				if [[ oneltr[$iter] == 1 ]]; then
-					newtlds+=($tlds[$iter])
+				if [[ ${oneltr[iter]} == 1 ]]; then
+					newtlds+=(${tlds[iter]})
 				fi
 			done
 			tlds=("${newtlds[@]}")
