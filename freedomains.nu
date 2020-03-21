@@ -1,0 +1,11 @@
+aa.nu
+ab.nu
+ac.nu
+ad.nu
+ae.nu
+aa.nu
+aa.nu
+aa.nu
+aa.nu
+aa.nu
+aa.nu
