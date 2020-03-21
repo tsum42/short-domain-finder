@@ -26,7 +26,7 @@ if [ -n "$1" ] ; then
 				oneltr=(0 0 1 0 0 1 1 0 1 0 0 1 1 1 0 0 0 0 0 1 1 1 0 1 1 0 1)
         tlds=(si no de it ru co uk me us ca pw fr cc cn be nl tn eu su cz dk ro lt at se hu nu)
         availables=('No entries found' 'No whois information found' 'Status: free' 'Status:             AVAILABLE', 'No entries found for the selected source' 'No Data Found' 'No whois information found.' 'NOT FOUND' 'No Data Found' 'Not found' 'DOMAIN NOT FOUND' 'No entries found' 'No whois information found.' 'No whois information found.' 'Status: AVAILABLE', '.nl is free', 'NO OBJECT FOUND!', 'Status: AVAILABLE', 'No entries found for the selected source(s).' '%ERROR:101: no entries found' 'Not found:', 'No entries found for the selected source(s).', 'available', 'nothing found', ' not found.' 'No match', 'not found.')
-        denieds=('Query denied' 'limit exceeded' '55000000002' 'denied', 'You have exceeded allowed connection rate', 'denied' 'denied' 'denied' 'denied' 'denied' 'denied' 'denied' 'denied' 'denied' 'denied' 'denied' 'denied' 'denied' 'You have exceeded allowed connection rate' 'denied' 'denied' 'denied' 'denied' 'denied' 'denied' 'denied') # ne vem za: it co me us ca pw fr cc cn be nl tn eu cz dk ro lt at se hu nu
+        denieds=('Query denied' 'limit exceeded' '55000000002' 'denied', 'You have exceeded allowed connection rate', 'denied' 'denied' 'denied' 'denied' 'denied' 'denied' 'denied' 'denied' 'denied' 'denied' 'denied' 'denied' 'denied' 'You have exceeded allowed connection rate' 'denied' 'denied' 'denied' 'Quota exceeded' 'denied' 'denied' 'denied') # ne vem za: it co me us ca pw fr cc cn be nl tn eu cz dk ro lt se hu nu
         sleeps=(36 29 87 87 2 87 87 87 87 87 60 87 87 87 87 173 173 1 2 173 87 173 1 87 1 87 1) # idk about: me it uk us ca fr cc cn be tn cz dk at hu
         # add your domains, you get the point
         spanje=${sleeps[0]} # max sleep of sleeps will be the sleep (-;
@@ -119,6 +119,9 @@ echo "---> Starting... Delay: "$spanje s", TLDs: "$tldcount"."
      while [[ $VAL == *${denieds[$i]}* ]]
      do
        echo -e "\e[95m$domain.${tlds[$i]} DENIED\e[0m"
+			 if [[ $5 == true ]]; then
+				echo $VAL > "$whoisdatadir/$domain.${tlds[$i]}"
+			 fi
        sleep $spanje
        VAL=`whois $domain.${tlds[$i]}`
      done
