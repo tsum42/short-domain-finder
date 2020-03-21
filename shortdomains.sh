@@ -23,10 +23,10 @@ if [ -n "$1" ] ; then
         # .no domain: norwegian, uninett norid registry, 3000 queries per day wait till midnight
         # .de domain: germany, no data of registry, 1000 queries per day or ban
         # .it domain: italy, no data of registry, no data of requests per time amount
-        tlds=(si no de it ru co uk me us ca pw fr cc cn be)
-        availables=('No entries found' 'No whois information found' 'Status: free' 'Status:             AVAILABLE', 'No entries found for the selected source' 'No Data Found' 'No whois information found.' 'NOT FOUND' 'No Data Found' 'Not found' 'DOMAIN NOT FOUND' 'No entries found' 'No whois information found.' 'No whois information found.' 'Status: AVAILABLE')
-        denieds=('Query denied' 'limit exceeded' '55000000002' 'denied', 'You have exceeded allowed connection rate', 'denied' 'denied' 'denied' 'denied' 'denied' 'denied' 'denied' 'denied' 'denied' 'denied') ## idk about .it and .co and .me and .us and .ca and .pw and .fr and .cc and .cn and .be
-        sleeps=(36 29 87 87 2 87 87 87 87 87 60 87 87 87 87) # idk about .me .it .uk .us .ca .fr .cc .cn .be delay between requests in seconds to prevent ban
+        tlds=(si no de it ru co uk me us ca pw fr cc cn be nl tn eu su cz dk ro lt at se hu nu)
+        availables=('No entries found' 'No whois information found' 'Status: free' 'Status:             AVAILABLE', 'No entries found for the selected source' 'No Data Found' 'No whois information found.' 'NOT FOUND' 'No Data Found' 'Not found' 'DOMAIN NOT FOUND' 'No entries found' 'No whois information found.' 'No whois information found.' 'Status: AVAILABLE', '.nl is free', 'NO OBJECT FOUND!', 'Status: AVAILABLE', 'No entries found for the selected source(s).' '%ERROR:101: no entries found' 'Not found:', 'No entries found for the selected source(s).', 'available', 'nothing found', ' not found.' 'No match', 'not found.')
+        denieds=('Query denied' 'limit exceeded' '55000000002' 'denied', 'You have exceeded allowed connection rate', 'denied' 'denied' 'denied' 'denied' 'denied' 'denied' 'denied' 'denied' 'denied' 'denied' 'denied' 'denied' 'denied' 'You have exceeded allowed connection rate' 'denied' 'denied' 'denied' 'denied' 'denied' 'denied' 'denied') # ne vem za: it co me us ca pw fr cc cn be nl tn eu cz dk ro lt at se hu nu
+        sleeps=(36 29 87 87 2 87 87 87 87 87 60 87 87 87 87 173 173 1 2 173 87 173 1 87 1 87 1) # idk about: me it uk us ca fr cc cn be tn cz dk at hu
         # add your domains, you get the point
         spanje=${sleeps[0]} # max sleep of sleeps will be the sleep (-;
 
