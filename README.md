@@ -17,7 +17,7 @@ to generate a Control Hash Password to be placed in torrc. Also update that pass
 ```
 sudo apt clean
 cd
-git clone https://github.com/AstiriL/short-domain-finder.git
+git clone https://github.com/sijanec/short-domain-finder.git
 cd short-domain-finder
 chmod +x *.sh
 chmod +x *.py
